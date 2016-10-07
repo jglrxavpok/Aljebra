@@ -1,6 +1,7 @@
 package aljebra.predicates;
 
 import aljebra.MathObject;
+import aljebra.sets.Set;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,4 +54,5 @@ public class Predicates {
             }
         };
     }
+
 }

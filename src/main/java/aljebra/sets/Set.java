@@ -7,11 +7,13 @@ import aljebra.predicates.Predicates;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class Set extends MathObject {
 
     public static final Set EMPTY_SET = new EmptySet();
     private final Predicate definitionPredicate;
+    private Supplier<MathObject> objectFactory;
 
     protected Set(Predicate definition) {
         this.definitionPredicate = definition;
@@ -41,7 +43,7 @@ public class Set extends MathObject {
     }
 
     public MathObject takeAny() throws EmptySetException {
-        MathObject any = new MathObject();
+        MathObject any = objectFactory == null ? new MathObject() : objectFactory.get();
         any.addSatisfiedByDefinition(definitionPredicate);
         return any;
     }
@@ -94,5 +96,34 @@ public class Set extends MathObject {
 
     public static Set fromValues(MathObject... objects) {
         return new Set(Predicates.isInList(Arrays.asList(objects)));
+    }
+
+    public static Set isInstanceOf(Class<? extends MathObject> aClass) {
+        return Set.fromPredicate(new Predicate() {
+            @Override
+            public boolean satisfies(MathObject element) {
+                return aClass.isAssignableFrom(element.getClass());
+            }
+
+            @Override
+            public boolean alwaysTrue() {
+                return MathObject.class.equals(aClass);
+            }
+
+            @Override
+            public boolean alwaysFalse() {
+                return false;
+            }
+
+            @Override
+            public String toString() {
+                return "x is instance of "+aClass.getSimpleName();
+            }
+        });
+    }
+
+    public Set setObjectFactory(Supplier<MathObject> objectFactory) {
+        this.objectFactory = objectFactory;
+        return this;
     }
 }

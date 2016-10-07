@@ -23,4 +23,5 @@ public abstract class Value {
     public void setObject(MathObject object) {
         this.object = object;
     }
+
 }

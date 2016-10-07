@@ -3,6 +3,10 @@ package aljebra.sets;
 import aljebra.MathObject;
 import aljebra.exceptions.EmptySetException;
 import aljebra.predicates.Predicate;
+import aljebra.predicates.Predicates;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Set extends MathObject {
 
@@ -49,11 +53,9 @@ public class Set extends MathObject {
         return false;
     }
 
-    public static Set fromPredicate(Predicate predicate) {
-        return new Set(predicate);
-    }
-
     public boolean isEmpty() {
+        if(definitionPredicate.alwaysFalse())
+            return true;
         try {
             takeAny();
             return false;
@@ -76,5 +78,21 @@ public class Set extends MathObject {
 
     public String toString() {
         return "{x;"+definitionPredicate+"}";
+    }
+
+    public static Set fromPredicate(Predicate predicate) {
+        return new Set(predicate);
+    }
+
+    public static Set singleton(MathObject object) {
+        return new Set(Predicates.equality(object));
+    }
+
+    public static Set fromList(List<MathObject> objects) {
+        return new Set(Predicates.isInList(objects));
+    }
+
+    public static Set fromValues(MathObject... objects) {
+        return new Set(Predicates.isInList(Arrays.asList(objects)));
     }
 }
